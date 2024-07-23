@@ -188,6 +188,20 @@ nest_dead_wood_count$percentage <- (nest_dead_wood_count$n*100)/
 nest_dead_wood_count
 
 
+# 4. Eltonian shortfalls ----
+
+# Separate the species that the nesting information accuracy is not species
+bee_nest_accur <- bee_nest %>%
+  filter(Nesting.Data.Accuracy != "species") %>% 
+  count(Nesting.Position)
+
+# Calculate the percentage
+bee_nest_accur$percentage <- (bee_nest_accur$n*100)/nrow(bee_nest)
+bee_nest_accur
+
+# calculate the percentage of accuracy at species level
+100-sum(bee_nest_accur$percentage)
+
 ## =============================================================================
 ####                                  END                                   ####
 ## =============================================================================
