@@ -57,22 +57,24 @@ nest_position
 # 2. Types of nests substrate ----
 # Separate the nesting substrate into four classes 
 
-nest_modified <- nest_position %>%
+nest_modified <- bee_nest %>%
   mutate(Nesting.Substrate = case_when(
+    Nesting.Substrate %in% c("insect nest; human-made structures",
+                            "insect nest") ~ "Another animal nest",
     Nesting.Substrate %in% c("soil","soil; human-made structures") ~ "Soil",
-    Nesting.Substrate %in% c("insect nest","insect nest; human-made structures",
-                             "soil; insect nest", "wood, bird nest",
+    Nesting.Substrate %in% c("wood","wood; human-made structures",
+                             "cavity independent; human-made structures",
+                             "cavity independent") ~ "Woody plant",
+    Nesting.Substrate %in% c("no information") ~ "No information",
+    
+    Nesting.Substrate %in% c("soil; wood", "soil; wood; human-made structures") ~ "Soil or/and wood",
+    
+    Nesting.Substrate %in% c("soil; insect nest","wood, bird nest",
+                             "wood; insect nest; human-made structure",
                              "wood; human-made structures; insect nest",
                              "wood; insect nest",
-                             "wood; insect nest; human-made structure",
-                             "wood; insect nest; soil") ~ "Another animal nest",
-    Nesting.Substrate %in% c("wood; human-made structures","wood",
-                             "cavity independent; human-made structures",
-                             "soil; wood; human-made structures",
                              "wood; insect nest; soil; human-made structures",
-                             "cavity independent") ~ "Woody plant",
-    Nesting.Substrate %in% c("soil; wood") ~ "Soil or/and wood",
-    Nesting.Substrate %in% c("no information") ~ "No information",
+                             "wood; insect nest; soil") ~ "Soil or/and wood or/and another animal nest",
     TRUE ~ as.character(Nesting.Substrate) # if none of the above conditions 
     # are met, keep the original value
   ))
@@ -87,12 +89,12 @@ nest_substrate
 
 # Visualize the data
 barplot(nest_substrate$percentage, 
-        col=viridis::viridis(5), 
+        col=viridis::viridis(6), 
         border="white", 
         font.axis=1, 
-        beside=T, 
+        beside=T,
         names.arg = nest_substrate$Nesting.Substrate,
-        las = 1, cex.names = 0.7)
+        las = 2, cex.names = 0.7)
 
 
 
