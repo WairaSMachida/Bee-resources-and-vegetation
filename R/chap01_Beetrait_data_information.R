@@ -6,26 +6,25 @@
 
 ## ---------------------------------
 # Produced by Waira Saravia Machida
-# 2024/07/22
+# 2024/07/22, modified at 2024/08/06
 ## ---------------------------------
 
 # This script shows the information described in the section "Box 1. Diversity 
-# of bee nesting strategies: Brazil as a case study" from the paper of Machida
-# et al. in prep.
+# of bee nesting strategies: Brazil as a case study" and "Concluding remarks" 
+# from the paper of Machida et al. in prep.
 
 ## --------------
 # Packeges ----
-library(readxl)
-library(readr)
 library(dplyr) 
 library(here)
 ## --------------
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ----
 # Import and prepare BBTD
-bbtd <- read.csv(here("data",
-                      "Brazilian bee traits database_review_21072024.csv"), 
-                 h = T, sep = ";")
+# I downloaded the .csv file from https://github.com/lgcarvalheiro/BBTD
+bbtd <- read.csv(here("data","BBTD_01082024.csv"), 
+                 h = T, sep = ",")
+
 head(bbtd)
 names(bbtd)
 
@@ -33,7 +32,7 @@ names(bbtd)
 bbtd$specie <- paste(bbtd$Genus, bbtd$Specific.Epithet)
 head(bbtd)
 
-# There are information of 2062 bees
+# There are information of 2060 bees
 nrow(bbtd)
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ----
 
@@ -55,7 +54,8 @@ nest_position
 
 
 # 2. Types of nests substrate ----
-# Separate the nesting substrate into four classes 
+# Separate the nesting substrate into five classes 
+# Data used to construct the top-left bar of Figure I.
 
 nest_modified <- bee_nest %>%
   mutate(Nesting.Substrate = case_when(
@@ -102,7 +102,7 @@ barplot(nest_substrate$percentage,
 
 # Change the classes of nesting substrate to filter those that use wood
 # Here we merge all the species that use wood
-nest_modified2 <- nest_position %>%
+nest_modified2 <- bee_nest %>%
   mutate(Nesting.Substrate = case_when(
     Nesting.Substrate %in% c("wood; human-made structures",
                           "soil; wood","wood; insect nest",
@@ -114,6 +114,11 @@ nest_modified2 <- nest_position %>%
                           "wood; human-made structures; insect nest",
                           "cavity independent",
                           "cavity independent; human-made structures") ~ "wood",
+    Nesting.Substrate %in% c("insect nest",
+                             "insect nest; human-made structures") ~ "insect nest",
+    Nesting.Substrate %in% c("soil",
+                             "soil; human-made structures") ~ "soil",
+    Nesting.Substrate %in% c("soil; insect nest") ~ "soil and/or insect nest",
         TRUE ~ as.character(Nesting.Substrate) # if none of the above conditions 
     # are met, keep the original value
   ))
@@ -122,7 +127,7 @@ nest_modified2 <- nest_position %>%
 
 # 3.1 How many bees nest in the wood?
 nest_subst_count <- nest_modified2 %>% 
-  count(Nesting.Substrate) # 776 species that nest in wood
+  count(Nesting.Substrate) # 769 species that nest in wood
 
 # Calculate the percentage
 nest_subst_count$perc <- (nest_subst_count$n*100)/sum(nest_subst_count$n)
@@ -131,7 +136,8 @@ nest_subst_count
 
 
 # 3.2 How about the dead wood?
-nest_modified3 <- nest_pos_wood_modified %>%
+
+nest_modified3 <- nest_modified2 %>%
   mutate(Nesting.Substrate = case_when(
     stringr::str_detect(Nesting.Remarks, "dead") ~ "dead wood",
     stringr::str_detect(Nesting.Remarks, "rott") ~ "dead wood",
@@ -140,17 +146,34 @@ nest_modified3 <- nest_pos_wood_modified %>%
     TRUE ~ as.character(Nesting.Substrate)))
 
 # How many species nest in dead and alive wood?
-dead_alive_wood <- nest_modified3 %>%
+nest_subst_count_wood <- nest_modified3 %>%
   count(Nesting.Substrate)
 
 # Calculate the percentage
-dead_alive_wood$percentage <- (dead_alive_wood$n*100)/nrow(nest_modified3)
-dead_alive_wood
+nest_subst_count_wood$percentage <- (nest_subst_count_wood$n*100)/nrow(nest_modified3)
+nest_subst_count_wood
+
+
+
+# 3.2.1 Within wood nesting, how many nest in dead and alive wood?
+
+dead_alive_wood <- nest_modified3 %>% 
+  filter(Nesting.Substrate == "wood" | Nesting.Substrate == "dead wood")
+
+# How many species nest in dead and alive wood?
+dead_alive_wood_count <- dead_alive_wood %>%
+  count(Nesting.Substrate)
+
+# Calculate the percentage
+dead_alive_wood_count$percentage <- (dead_alive_wood_count$n*100)/nrow(dead_alive_wood)
+dead_alive_wood_count
 
 
 
 # 3.3 Within each group, how the nesting method varies?
 # Alive wood
+# Middle-bar of the Figure I
+
 nest_alive_wood <- nest_modified3 %>% 
   filter(Nesting.Substrate == "wood")
 
@@ -175,6 +198,7 @@ barplot(nest_alive_wood_count$percentage,
 
 
 # Dead wood
+
 nest_dead_wood <- nest_modified3 %>% 
   filter(Nesting.Substrate == "dead wood")
 
