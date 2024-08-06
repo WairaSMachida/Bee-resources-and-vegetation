@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This repository contained the R script used to extract bee trait information used in the paper of Machida et al. in prep. This is the result of the first chapter of my PhD thesis started at 2021 in the Universidade Federal de Gpiás/Brazil.
 
-```{r, echo=FALSE, out.width="90%", fig.cap= "Theorical approach used in this study in which the differences on the structural diversity of the natural habitats are added as variables to access the effects of the landscape simplification on pollinator diversity.", fig.align="center"}
+```{r, echo=FALSE, out.width="90%",fig.align="center"}
 knitr::include_graphics("output/fig_readme.png")
 ```
 
