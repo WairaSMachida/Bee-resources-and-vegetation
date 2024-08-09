@@ -6,9 +6,9 @@
 This repository contained the R script used to extract bee trait
 information used in the paper of Machida et al. in prep. This is the
 result of the first chapter of my PhD thesis started at 2021 in the
-Universidade Federal de Gpiás/Brazil.
+Universidade Federal de Goiás/Brazil.
 
-<img src="output/fig_readme.png" width="90%" style="display: block; margin: auto;" />
+<img src="fig_readme.png" width="90%" style="display: block; margin: auto;" />
 
 ## Authors
 

@@ -10,10 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## General overview
 
-This repository contained the R script used to extract bee trait information used in the paper of Machida et al. in prep. This is the result of the first chapter of my PhD thesis started at 2021 in the Universidade Federal de Gpiás/Brazil.
+This repository contained the R script used to extract bee trait information used in the paper of Machida et al. in prep. This is the result of the first chapter of my PhD thesis started at 2021 in the Universidade Federal de Goiás/Brazil.
 
 ```{r, echo=FALSE, out.width="90%",fig.align="center"}
-knitr::include_graphics("output/fig_readme.png")
+knitr::include_graphics("fig_readme.png")
 ```
 
 ## Authors
